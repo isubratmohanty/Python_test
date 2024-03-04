@@ -1,7 +1,7 @@
 FROM ubuntu
 
 WORKDIR /app
-copy ./* /app/
+COPY ./devops_demo/ /app/
 
 
 RUN apt-get update && \
