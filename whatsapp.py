@@ -1,8 +1,8 @@
-import pyautogui
+import pyautogui # type: ignore
 import time
 time.sleep(3)
 count=0
-while count<=100:
-    pyautogui.typewrite('ZAC BHAI' )
+while count<=5:
+    pyautogui.typewrite('Happy Birth Day')
     pyautogui.press('enter')
     count=count+1

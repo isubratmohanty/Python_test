@@ -1,0 +1,35 @@
+
+pipeline {
+    agent any
+    triggers {
+        schedule(interval:10, units:"MINUTES")
+    }
+    stages {
+        stage("Build"){
+            steps {
+                echo "Starting Build"
+                sh 'docker build -t ubuntu'
+            }
+        }
+                stage ("Test") {
+                sh 'docker run -it --rm  ubuntu /bin/bash -c "echo hello world"'
+                }
+                stage( "Deploy") {
+                    when { branch isEqualTo "master"}
+                    steps {
+                        script {
+                            sh 'docker run -p 8080:8080 -d --name  my-app ubuntu'
+                            // Get the container ID and store it in a variable.
+                            CONTAINER_ID = sh
+                            (returnStdout: true, script : 'echo $(docker ps -lq)').trim()
+                            println "Container Id is ${CONTAINER_ID}"
+
+                            // Call REST API to update the app with new version number
+                            APP_VERSION=sh('curl -s http://localhost:8080')
+                        }
+                    }
+                }
+
+    }
+
+}
